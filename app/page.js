@@ -36,7 +36,6 @@ export default function Home() {
       setName('')
       setEmail('')
       setMessage('')
-
       alert('Data added to Firestore Database')
     }
   }
