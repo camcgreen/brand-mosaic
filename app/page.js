@@ -3,11 +3,7 @@ import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
 import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
-
-// Styles
 import 'react-camera-ios/build/styles.css'
-
-const containerStyle = { display: 'flex', height: '300px', width: '300px' }
 
 async function addDataToFirestore(name, email, message) {
   try {
@@ -39,6 +35,8 @@ export default function Home() {
       alert('Data added to Firestore Database')
     }
   }
+
+  const containerStyle = { display: 'flex', height: '300px', width: '300px' }
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
