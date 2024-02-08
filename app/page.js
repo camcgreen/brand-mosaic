@@ -2,7 +2,7 @@
 import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
 import { useState, useEffect, useRef } from 'react'
-import { Camera } from 'react-camera-pro'
+import { Camera, CameraElement } from 'react-use-camera'
 
 // async function addDataToFirestore(name, email, message) {
 //   try {
@@ -20,6 +20,41 @@ import { Camera } from 'react-camera-pro'
 // }
 
 export default function Home() {
+  const cameraRef = useRef(null)
+
+  const handleCapture = async () => {
+    const imageData = await cameraRef.current?.capture() // Camera view will pause after capture
+    // imageData.url is a base64 string that can also be used as src for an <img/> tag
+    // imageData.blob is a blob string to send to your server
+
+    // NOTES:
+    // (i) Use `cameraRef.current?.capture({ mirror: true });` to flip the captured image (will be enabled by default on front camera)
+    // (ii) Use `cameraRef.current?.capture({ width: 512 });` to capture image in 512px width (height will be auto calculated)
+    // (iii) Use `cameraRef.current?.capture({ height: 512 });` to capture image in 512px height (width will be auto calculated)
+    // (iv) If width or height is not specified, your captured image will be of the same size as the camera resolution
+  }
+
+  const handleClear = () => {
+    cameraRef.current?.clear() // Discards the captured photo and resumes the camera view
+  }
+
+  return (
+    <div>
+      <Camera
+        ref={cameraRef}
+        className='your-classes-here'
+        style={{ width: 200, height: 200 }}
+        errorLayout={<div>Oops!</div>}
+        onReady={() => console.log('Camera is now visibile to the user')}
+        onError={(e) => console.error("Camera couldn't load :(")}
+      />
+
+      {/* Add your own UI here... */}
+      <button onClick={handleCapture}>Capture</button>
+      <button onClick={handleClear}>Clear</button>
+    </div>
+  )
+
   // const [name, setName] = useState('')
   // const [email, setEmail] = useState('')
   // const [message, setMessage] = useState('')
@@ -34,21 +69,6 @@ export default function Home() {
   //     alert('Data added to Firestore Database')
   //   }
   // }
-
-  const camera = useRef(null)
-  const [image, setImage] = useState(null)
-
-  return (
-    <div>
-      <div className='relative w-48 h-48'>
-        <Camera ref={camera} />
-      </div>
-      <button onClick={() => setImage(camera.current.takePhoto())}>
-        Take photo
-      </button>
-      <img src={image} alt='Taken photo' />
-    </div>
-  )
 
   // return (
   //   <main className='flex min-h-screen flex-col items-center justify-between p-24'>
