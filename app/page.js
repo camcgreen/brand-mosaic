@@ -3,7 +3,7 @@ import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
 import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
-import 'react-camera-ios/build/styles.css'
+// import 'react-camera-ios/build/styles.css'
 
 async function addDataToFirestore(name, email, message) {
   try {
