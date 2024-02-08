@@ -2,12 +2,12 @@
 import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
-import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
+// import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
 
-// Styles
-import 'react-camera-ios/build/styles.css'
+// // Styles
+// import 'react-camera-ios/build/styles.css'
 
-const containerStyle = { display: 'flex', height: '300px', width: '300px' }
+// const containerStyle = { display: 'flex', height: '300px', width: '300px' }
 
 async function addDataToFirestore(name, email, message) {
   try {
@@ -45,7 +45,7 @@ export default function Home() {
       <h1 className='text-5xl font-bold m-10'>
         Add Data to Firestore Database
       </h1>
-      <div style={containerStyle}>
+      {/* <div style={containerStyle}>
         <Camera
           device={DEVICE.MOBILE}
           facingMode={FACING_MODE.ENVIRONMENT}
@@ -54,7 +54,7 @@ export default function Home() {
           onError={(error) => alert(error)}
           onTakePhoto={(dataUrl) => console.log(dataUrl)}
         />
-      </div>
+      </div> */}
       ,
       {/* <form
         onSubmit={handleSubmit}
