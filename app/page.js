@@ -2,12 +2,12 @@
 import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
-// import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
+import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
 
-// // Styles
-// import 'react-camera-ios/build/styles.css'
+// Styles
+import 'react-camera-ios/build/styles.css'
 
-// const containerStyle = { display: 'flex', height: '300px', width: '300px' }
+const containerStyle = { display: 'flex', height: '300px', width: '300px' }
 
 async function addDataToFirestore(name, email, message) {
   try {
