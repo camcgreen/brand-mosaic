@@ -1,107 +1,108 @@
 'use client'
 import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
-import { useState, useEffect } from 'react'
-import Camera, { DEVICE, FACING_MODE, PLACEMENT } from 'react-camera-ios'
-// import 'react-camera-ios/build/styles.css'
+import { useState, useEffect, useRef } from 'react'
+import { Camera } from 'react-camera-pro'
 
-async function addDataToFirestore(name, email, message) {
-  try {
-    const docRef = await addDoc(collection(db, 'messages'), {
-      name: name,
-      email: email,
-      message: message,
-    })
-    console.log('Document written with ID: ', docRef.id)
-    return true
-  } catch (error) {
-    console.error('Error adding document ', error)
-    return false
-  }
-}
+// async function addDataToFirestore(name, email, message) {
+//   try {
+//     const docRef = await addDoc(collection(db, 'messages'), {
+//       name: name,
+//       email: email,
+//       message: message,
+//     })
+//     console.log('Document written with ID: ', docRef.id)
+//     return true
+//   } catch (error) {
+//     console.error('Error adding document ', error)
+//     return false
+//   }
+// }
 
 export default function Home() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+  // const [name, setName] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [message, setMessage] = useState('')
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    const added = await addDataToFirestore(name, email, message)
-    if (added) {
-      setName('')
-      setEmail('')
-      setMessage('')
-      alert('Data added to Firestore Database')
-    }
-  }
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   const added = await addDataToFirestore(name, email, message)
+  //   if (added) {
+  //     setName('')
+  //     setEmail('')
+  //     setMessage('')
+  //     alert('Data added to Firestore Database')
+  //   }
+  // }
 
-  const containerStyle = { display: 'flex', height: '300px', width: '300px' }
+  const camera = useRef(null)
+  const [image, setImage] = useState(null)
 
   return (
-    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <h1 className='text-5xl font-bold m-10'>
-        Add Data to Firestore Database
-      </h1>
-      {/* <div style={containerStyle}>
-        <Camera
-          device={DEVICE.MOBILE}
-          facingMode={FACING_MODE.ENVIRONMENT}
-          placement={PLACEMENT.COVER}
-          quality='1'
-          onError={(error) => alert(error)}
-          onTakePhoto={(dataUrl) => console.log(dataUrl)}
-        />
-      </div> */}
-      ,
-      {/* <form
-        onSubmit={handleSubmit}
-        className='max-w-md mx-auto p-4 bg-white shadow-md rounded-lg'
-      >
-        <div className='mb-4'>
-          <label htmlFor='name' className='block text-gray-700 font-bold mb-2'>
-            Name:
-          </label>
-          <input
-            type='text'
-            id='name'
-            className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label htmlFor='name' className='block text-gray-700 font-bold mb-2'>
-            Email:
-          </label>
-          <input
-            type='email'
-            id='email'
-            className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label
-            htmlFor='message'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Message:
-          </label>
-          <textarea
-            rows={5}
-            id='message'
-            className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </div>
-        <div className='text-center'>
-          <button
-            type='submit'
-            className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg'
-          >
-            Submit
-          </button>
-        </div>
-      </form> */}
-    </main>
+    <div>
+      <div className='relative w-48 h-48'>
+        <Camera ref={camera} />
+      </div>
+      <button onClick={() => setImage(camera.current.takePhoto())}>
+        Take photo
+      </button>
+      <img src={image} alt='Taken photo' />
+    </div>
   )
+
+  // return (
+  //   <main className='flex min-h-screen flex-col items-center justify-between p-24'>
+  //     <h1 className='text-5xl font-bold m-10'>
+  //       Add Data to Firestore Database
+  //     </h1>
+  //     <form
+  //       onSubmit={handleSubmit}
+  //       className='max-w-md mx-auto p-4 bg-white shadow-md rounded-lg'
+  //     >
+  //       <div className='mb-4'>
+  //         <label htmlFor='name' className='block text-gray-700 font-bold mb-2'>
+  //           Name:
+  //         </label>
+  //         <input
+  //           type='text'
+  //           id='name'
+  //           className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
+  //           value={name}
+  //           onChange={(e) => setName(e.target.value)}
+  //         />
+  //         <label htmlFor='name' className='block text-gray-700 font-bold mb-2'>
+  //           Email:
+  //         </label>
+  //         <input
+  //           type='email'
+  //           id='email'
+  //           className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
+  //           value={email}
+  //           onChange={(e) => setEmail(e.target.value)}
+  //         />
+  //         <label
+  //           htmlFor='message'
+  //           className='block text-gray-700 font-bold mb-2'
+  //         >
+  //           Message:
+  //         </label>
+  //         <textarea
+  //           rows={5}
+  //           id='message'
+  //           className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
+  //           value={message}
+  //           onChange={(e) => setMessage(e.target.value)}
+  //         />
+  //       </div>
+  //       <div className='text-center'>
+  //         <button
+  //           type='submit'
+  //           className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg'
+  //         >
+  //           Submit
+  //         </button>
+  //       </div>
+  //     </form>
+  //   </main>
+  // )
 }
