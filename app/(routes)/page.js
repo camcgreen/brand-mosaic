@@ -38,19 +38,27 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <Camera
-        ref={cameraRef}
-        className='your-classes-here'
-        style={{ width: 200, height: 200 }}
-        errorLayout={<div>Oops!</div>}
-        onReady={() => console.log('Camera is now visible to the user')}
-        onError={(e) => console.error("Camera couldn't load :(")}
-      />
-
-      {/* Add your own UI here... */}
-      <button onClick={handleCapture}>Capture</button>
-      <button onClick={handleClear}>Clear</button>
-    </div>
+    <main className='p-12 py-20 h-screen-sm flex flex-col justify-between'>
+      <section className='h-16'>
+        <h1 className='text-3xl font-medium text-center'>
+          STRIKE A<br />
+          <span className='font-extralight'>POSE</span>
+        </h1>
+      </section>
+      <section className='w-full aspect-square bg-gray-400 flex flex-col justify-center'>
+        <Camera
+          ref={cameraRef}
+          className='w-full h-full rounded-lg'
+          errorLayout={<div>Oops!</div>}
+          onReady={() => console.log('Camera is now visible to the user')}
+          onError={(e) => console.error("Camera couldn't load :(")}
+        />
+      </section>
+      <section className='h-16 flex flex-col align-center'>
+        {/* Add your own UI here... */}
+        <button onClick={handleCapture}>Capture</button>
+        {/* <button onClick={handleClear}>Clear</button> */}
+      </section>
+    </main>
   )
 }
