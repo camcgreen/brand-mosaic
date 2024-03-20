@@ -1,8 +1,9 @@
 'use client'
+
 import { db } from '@/app/firebaseConfig'
 import { collection, addDoc } from 'firebase/firestore'
 import { useState, useEffect, useRef } from 'react'
-import { Camera, CameraElement } from 'react-use-camera'
+import { Camera } from 'react-use-camera'
 
 async function addPhotoToFirestore(img) {
   try {
@@ -19,22 +20,44 @@ async function addPhotoToFirestore(img) {
 
 export default function Home() {
   const cameraRef = useRef(null)
+  const [countdown, setCountdown] = useState(4)
+  const [capturedImg, setCapturedImg] = useState(null)
+  const [showOverlay, setShowOverlay] = useState(false)
 
-  const handleCapture = async () => {
-    const imageData = await cameraRef.current?.capture({ width: 512 }) // Camera view will pause after capture
-    addPhotoToFirestore(imageData.url)
-    // imageData.url is a base64 string that can also be used as src for an <img/> tag
-    // imageData.blob is a blob string to send to your server
-
-    // NOTES:
-    // (i) Use `cameraRef.current?.capture({ mirror: true });` to flip the captured image (will be enabled by default on front camera)
-    // (ii) Use `cameraRef.current?.capture({ width: 512 });` to capture image in 512px width (height will be auto calculated)
-    // (iii) Use `cameraRef.current?.capture({ height: 512 });` to capture image in 512px height (width will be auto calculated)
-    // (iv) If width or height is not specified, your captured image will be of the same size as the camera resolution
+  const handleCameraCapture = async () => {
+    const imageData = await cameraRef.current?.capture({ width: 512 })
+    setCapturedImg(imageData.url)
   }
 
-  const handleClear = () => {
-    cameraRef.current?.clear() // Discards the captured photo and resumes the camera view
+  const handleCameraClear = () => {
+    cameraRef.current?.clear()
+  }
+
+  const handleCountdown = () => {
+    setCountdown(3)
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          handleCameraCapture()
+          return 0
+        } else {
+          return prev - 1
+        }
+      })
+    }, 1000)
+  }
+
+  const handleSave = async () => {
+    await addPhotoToFirestore(capturedImg) // img as base64 string
+    setShowOverlay(true)
+  }
+
+  const handleReset = () => {
+    handleCameraClear()
+    setCountdown(4)
+    setCapturedImg(null)
+    setShowOverlay(false)
   }
 
   return (
@@ -54,11 +77,60 @@ export default function Home() {
           onError={(e) => console.error("Camera couldn't load :(")}
         />
       </section>
-      <section className='h-16 flex flex-col align-center'>
-        {/* Add your own UI here... */}
-        <button onClick={handleCapture}>Capture</button>
-        {/* <button onClick={handleClear}>Clear</button> */}
+      <section className='h-12 flex justify-center align-center'>
+        {countdown ? (
+          <button
+            onClick={handleCountdown}
+            className='h-full aspect-square border border-black rounded-[1000px] flex justify-center items-center transition-all'
+            style={{ backgroundColor: countdown < 4 ? 'white' : 'black' }}
+          >
+            {countdown < 4 ? (
+              <span className='text-xl text-center'>
+                {Math.max(countdown, 0)}
+              </span>
+            ) : (
+              <img
+                src='/images/camera.svg'
+                alt='Take photo'
+                className='w-6 aspect-square'
+              />
+            )}
+          </button>
+        ) : (
+          <div className='flex'>
+            <button
+              className='h-full px-6 mr-4 border border-black rounded-[1000px] text-white bg-black flex justify-center items-center transition-all'
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              className='h-full px-6 border border-black rounded-[1000px] flex justify-center items-center transition-all'
+              onClick={handleReset}
+            >
+              Retake
+            </button>
+          </div>
+        )}
       </section>
+      <div
+        className='fixed left-0 top-0 z-10 w-screen h-screen-sm bg-black/90 transition-all flex flex-col justify-center text-white items-center text-center'
+        style={{
+          opacity: showOverlay ? 1 : 0,
+          pointerEvents: showOverlay ? 'all' : 'none',
+        }}
+        id='overlay'
+      >
+        <h2 className='max-w-80 mb-4'>
+          You’ve been added to the mosaic on the main screen!
+        </h2>
+        <button
+          className='py-2 px-6 border border-white rounded-[1000px] flex justify-center items-center transition-all'
+          onClick={handleReset}
+        >
+          Okay
+        </button>
+      </div>
     </main>
   )
 }
