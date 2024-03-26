@@ -12,9 +12,6 @@ export default function Mosaic() {
       const imagesTmp = []
       snapshot.forEach((doc) => {
         imagesTmp.push(doc.data().img)
-        imagesTmp.push(doc.data().img)
-        imagesTmp.push(doc.data().img)
-        imagesTmp.push(doc.data().img)
       })
       const gridTmp = Array(12 * 5).fill(null)
       imagesTmp.forEach((img) => {
